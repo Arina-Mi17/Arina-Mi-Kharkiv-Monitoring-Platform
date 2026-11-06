@@ -1,0 +1,30 @@
+name: Telegram channel sync
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
+permissions:
+  contents: write
+concurrency:
+  group: telegram-channel-sync
+  cancel-in-progress: false
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Sync selected civil channel posts
+        env:
+          TELEGRAM_BOT_TOKEN: \${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHANNEL_USERNAME: \${{ vars.TELEGRAM_CHANNEL_USERNAME }}
+        run: node scripts/telegram-sync.mjs
+      - name: Save new public messages
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/messages.json .telegram-offset
+          if ! git diff --cached --quiet; then
+            git commit -m "Sync selected civil Telegram posts"
+            git push
+          fi
