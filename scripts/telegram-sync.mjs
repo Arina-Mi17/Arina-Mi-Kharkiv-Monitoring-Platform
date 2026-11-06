@@ -39,11 +39,19 @@ for (const update of updates) {
   const sensitive = /(координат|широт|довгот|азимут|курс(?:\s|:)|маршрут|летить|рухається|переміщ|ціль|fpv|шахед|іскандер|кинджал|ракет|ппо|позиці|пусков|військов)/iu;
   if (sensitive.test(text) || /\b\d{1,2}[.,]\d{3,}\s*[,;/ ]\s*\d{1,3}[.,]\d{3,}\b/u.test(text)) continue;
 
+  const townTags = {
+    "#місто_харків": "Харків", "#місто_дергачі": "Дергачі", "#місто_чугуїв": "Чугуїв",
+    "#місто_богодухів": "Богодухів", "#місто_мерефа": "Мерефа", "#місто_зміїв": "Зміїв",
+    "#місто_балаклія": "Балаклія", "#місто_ізюм": "Ізюм", "#місто_лозова": "Лозова",
+    "#місто_купянськ": "Куп’янськ"
+  };
+  const townEntry = Object.entries(townTags).find(([tag]) => normalized.includes(tag));
   const id = String(post.chat.id) + "_" + String(post.message_id);
   if (current.messages.some((item) => item.id === id)) continue;
   current.messages.unshift({
     id,
-    text: text.replace(/#намапу|#цивільне/giu, "").trim(),
+    town: townEntry ? townEntry[1] : "",
+    text: text.replace(/#намапу|#цивільне|#місто_[а-яіїєґ_]+/giu, "").trim(),
     date: post.date || Math.floor(Date.now() / 1000),
     sourceUrl: "https://t.me/" + channel + "/" + post.message_id,
     category: "Цивільне повідомлення",
