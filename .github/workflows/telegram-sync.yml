@@ -16,8 +16,8 @@ jobs:
         uses: actions/checkout@v4
       - name: Sync selected civil channel posts
         env:
-          TELEGRAM_BOT_TOKEN: \${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHANNEL_USERNAME: \${{ vars.TELEGRAM_CHANNEL_USERNAME }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHANNEL_USERNAME: ${{ vars.TELEGRAM_CHANNEL_USERNAME }}
         run: node scripts/telegram-sync.mjs
       - name: Save new public messages
         run: |
