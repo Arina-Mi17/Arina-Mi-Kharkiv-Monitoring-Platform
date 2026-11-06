@@ -21,6 +21,7 @@ h2{font-size:18px;margin:2px 0 10px}.muted{color:var(--muted);font-size:13px;lin
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:11px}.tile{background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:14px}.tile b{display:block;margin-bottom:5px;color:#fff}.status{display:inline-block;border:1px solid #52718e;background:#0a1b2d;border-radius:30px;padding:5px 10px;color:#c9dbed;font-size:11px;margin-top:10px}
 footer{text-align:center;color:#8198b2;font-size:11px;line-height:1.7;padding:20px}
 .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#10243b;color:#eef5ff}.leaflet-container a{color:#f2c500}.leaflet-control-attribution{font-size:10px}
+.feed-list{display:grid;gap:10px;margin-top:12px}.feed-card{background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:13px}.feed-card p{white-space:pre-wrap;margin:7px 0;color:var(--white)}.feed-meta{font-size:11px;color:var(--muted)}.feed-card a{color:var(--yellow);font-size:12px}.feed-empty{color:var(--muted);font-size:13px;padding:12px 0}
 @media(min-width:700px){main{padding:23px}}
 </style>
 </head>
@@ -43,6 +44,11 @@ footer{text-align:center;color:#8198b2;font-size:11px;line-height:1.7;padding:20
 <div class="map-tools"><input id="townSearch" type="search" placeholder="Введіть назву населеного пункту…" aria-label="Пошук населеного пункту"><button class="btn alt" id="showAll" type="button">ПОКАЗАТИ ВСЮ ОБЛАСТЬ</button></div>
 <div id="map" role="application" aria-label="Інтерактивна карта населених пунктів Харківської області"></div>
 <div class="legend"><span><i class="dot"></i>Населений пункт</span><span>Мапа: OpenStreetMap</span></div>
+</section>
+<section class="panel">
+<h2>Повідомлення з Telegram-каналу</h2>
+<div class="muted">Тут автоматично з’являтимуться дописи, які ти спеціально позначиш у каналі для публікації на сайті.</div>
+<div id="telegramFeed" class="feed-list"><div class="feed-empty">Завантаження повідомлень…</div></div>
 </section>
 <section class="panel">
 <h2>Корисні розділи</h2>
@@ -69,6 +75,27 @@ const bounds=L.latLngBounds(towns.map(t=>[t[1],t[2]]));
 document.getElementById('showAll').addEventListener('click',()=>map.fitBounds(bounds.pad(.18)));
 document.getElementById('townSearch').addEventListener('keydown',e=>{if(e.key==='Enter'){const q=e.target.value.trim().toLocaleLowerCase('uk');const found=markers.find(x=>x.name.toLocaleLowerCase('uk').includes(q));if(found){map.setView(found.marker.getLatLng(),11);found.marker.openPopup()}else if(q){e.target.setCustomValidity('Населений пункт не знайдено у списку');e.target.reportValidity();e.target.setCustomValidity('')}}});
 setTimeout(()=>map.invalidateSize(),250);
+async function loadTelegramFeed(){
+  const root=document.getElementById('telegramFeed');
+  try{
+    const response=await fetch('./data/messages.json?ts='+Date.now(),{cache:'no-store'});
+    if(!response.ok) throw new Error('feed unavailable');
+    const data=await response.json();
+    const messages=Array.isArray(data.messages)?data.messages:[];
+    root.replaceChildren();
+    if(!messages.length){root.innerHTML='<div class="feed-empty">Поки немає дописів, позначених для сайту.</div>';return;}
+    for(const item of messages){
+      const card=document.createElement('article');card.className='feed-card';
+      const meta=document.createElement('div');meta.className='feed-meta';
+      meta.textContent=(item.category||'Цивільне повідомлення')+' · '+new Date(item.date*1000).toLocaleString('uk-UA');
+      const body=document.createElement('p');body.textContent=item.text||'';
+      card.append(meta,body);
+      if(item.sourceUrl){const link=document.createElement('a');link.href=item.sourceUrl;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Відкрити оригінал у Telegram';card.append(link);}
+      root.append(card);
+    }
+  }catch(error){root.innerHTML='<div class="feed-empty">Стрічка тимчасово недоступна. Спробуйте оновити сторінку пізніше.</div>';}
+}
+loadTelegramFeed();
 </script>
 </body>
 </html>
