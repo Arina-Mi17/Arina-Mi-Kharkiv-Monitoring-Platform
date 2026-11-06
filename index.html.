@@ -1,0 +1,158 @@
+index.html
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071426">
+  <title>ARINA MI MONITOR</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #071426;
+      color: #eef5ff;
+      font-family: Arial, sans-serif;
+    }
+    header {
+      padding: 20px 16px;
+      background: linear-gradient(120deg,#0b2039,#102e50);
+      border-bottom: 2px solid #f2c500;
+    }
+    .brand { font-size: 23px; font-weight: 900; letter-spacing: 1px; }
+    .brand span { color: #f2c500; }
+    .sub { margin-top: 6px; color: #a9bfd8; font-size: 12px; }
+    .status {
+      margin: 14px;
+      padding: 14px;
+      border: 1px solid #294866;
+      border-radius: 12px;
+      background: #10243b;
+    }
+    .status strong { display: block; margin-bottom: 6px; }
+    .status p { margin: 0; color: #b7c9dc; font-size: 13px; line-height: 1.5; }
+    .actions { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 12px; }
+    a.button {
+      display: inline-block;
+      padding: 10px 13px;
+      border-radius: 8px;
+      background: #f2c500;
+      color: #071426;
+      font-weight: bold;
+      font-size: 13px;
+      text-decoration: none;
+    }
+    a.secondary { background: #183b5c; color: #eef5ff; }
+    .section-title { margin: 18px 14px 10px; font-size: 16px; }
+    #map {
+      height: 55vh;
+      min-height: 340px;
+      margin: 0 12px;
+      border: 1px solid #294866;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .notice {
+      margin: 12px 14px;
+      padding: 13px;
+      background: #10243b;
+      border-left: 3px solid #f2c500;
+      border-radius: 8px;
+      color: #c5d4e4;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    footer {
+      padding: 20px 14px;
+      color: #8198b2;
+      font-size: 11px;
+      text-align: center;
+      line-height: 1.5;
+    }
+    .leaflet-popup-content-wrapper, .leaflet-popup-tip {
+      background: #10243b;
+      color: #eef5ff;
+    }
+    @media (min-width: 700px) {
+      #map { height: 600px; }
+      main { max-width: 1100px; margin: auto; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">ARINA MI <span>MONITOR</span></div>
+    <div class="sub">ІНФОРМАЦІЙНА ПЛАТФОРМА · ХАРКІВ ТА ОБЛАСТЬ</div>
+  </header>
+
+  <main>
+    <section class="status">
+      <strong>Інформація для мешканців Харківщини</strong>
+      <p>
+        Тут розміщується загальна цивільна інформація та посилання
+        на офіційні джерела. Ця сторінка не є системою оповіщення
+        і не підтверджує відсутність небезпеки.
+      </p>
+      <div class="actions">
+        <a class="button" href="https://alerts.in.ua/" target="_blank" rel="noopener">
+          Перевірити повітряну тривогу
+        </a>
+        <a class="button secondary" href="https://t.me/kharkiv_info_chanel" target="_blank" rel="noopener">
+          Telegram-канал
+        </a>
+      </div>
+    </section>
+
+    <h2 class="section-title">Мапа Харківської області</h2>
+    <div id="map"></div>
+
+    <h2 class="section-title">Інформаційна стрічка</h2>
+    <div class="notice">
+      <strong>Інформаційний розділ</strong><br>
+      Тут згодом публікуватимуться перевірені повідомлення
+      для цивільного населення: загальні попередження,
+      рекомендації та важливі оголошення.
+    </div>
+  </main>
+
+  <footer>
+    ARINA MI MONITOR · Харківська область<br>
+    Карта показує населені пункти, а не місця перебування повітряних цілей.
+    Користуйтеся офіційними джерелами та дотримуйтеся правил безпеки.
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map').setView([49.45, 36.0], 8);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+
+    const towns = [
+      ['Харків', 49.9935, 36.2304],
+      ['Дергачі', 50.1066, 36.1211],
+      ['Чугуїв', 49.8359, 36.6880],
+      ['Богодухів', 50.1647, 35.5279],
+      ['Мерефа', 49.8230, 36.0500],
+      ['Зміїв', 49.6960, 36.3610],
+      ['Балаклія', 49.4627, 36.8590],
+      ['Ізюм', 49.2088, 37.2485],
+      ['Лозова', 48.8894, 36.3175],
+      ['Куп’янськ', 49.7106, 37.6150]
+    ];
+
+    towns.forEach(([name, lat, lng]) => {
+      L.circleMarker([lat, lng], {
+        radius: 6,
+        color: '#f2c500',
+        weight: 2,
+        fillColor: '#1769aa',
+        fillOpacity: 0.95
+      }).addTo(map).bindPopup('<b>' + name + '</b><br>Населений пункт Харківської області');
+    });
+  </script>
+</body>
+</html>
