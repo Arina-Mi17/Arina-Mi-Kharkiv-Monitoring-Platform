@@ -87,11 +87,22 @@ async function loadTelegramFeed(){
     for(const item of messages){
       const card=document.createElement('article');card.className='feed-card';
       const meta=document.createElement('div');meta.className='feed-meta';
-      meta.textContent=(item.category||'Цивільне повідомлення')+' · '+new Date(item.date*1000).toLocaleString('uk-UA');
+      meta.textContent=(item.town?item.town+' · ':'')+(item.category||'Цивільне повідомлення')+' · '+new Date(item.date*1000).toLocaleString('uk-UA');
       const body=document.createElement('p');body.textContent=item.text||'';
       card.append(meta,body);
       if(item.sourceUrl){const link=document.createElement('a');link.href=item.sourceUrl;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Відкрити оригінал у Telegram';card.append(link);}
       root.append(card);
+    }
+    // Attach civil notices to broad settlement-center markers only.
+    for(const point of markers){
+      const related=messages.filter(item=>item.town===point.name);
+      if(!related.length) continue;
+      const popup=document.createElement('div');
+      const heading=document.createElement('strong');heading.textContent=point.name+' — цивільні повідомлення';popup.append(heading);
+      for(const item of related.slice(0,5)){
+        const paragraph=document.createElement('p');paragraph.textContent=item.text||'';popup.append(paragraph);
+      }
+      point.marker.bindPopup(popup);
     }
   }catch(error){root.innerHTML='<div class="feed-empty">Стрічка тимчасово недоступна. Спробуйте оновити сторінку пізніше.</div>';}
 }
