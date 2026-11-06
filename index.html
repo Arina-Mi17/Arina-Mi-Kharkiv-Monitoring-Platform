@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071426">
+<title>ARINA MI MONITOR — Харків та область</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{--bg:#071426;--panel:#10243b;--line:#294866;--yellow:#f2c500;--blue:#2479bd;--muted:#a9bfd8}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#eef5ff;font:15px Arial,sans-serif}
+header{padding:22px 18px;background:linear-gradient(120deg,#0b2039,#12375c);border-bottom:2px solid var(--yellow)}
+.brand{font-size:clamp(22px,5vw,30px);font-weight:900;letter-spacing:1px}.brand span{color:var(--yellow)}
+.sub{margin-top:7px;color:var(--muted);font-size:11px;letter-spacing:1.2px}
+main{max-width:1120px;margin:auto;padding:14px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:15px;margin-bottom:14px}
+h2{font-size:17px;margin:4px 0 12px}.muted{color:var(--muted);font-size:13px;line-height:1.6}
+.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:13px}
+.btn{display:inline-block;padding:11px 14px;border-radius:9px;background:var(--yellow);color:#071426;text-decoration:none;font-weight:700;font-size:13px}
+.btn.alt{background:#1a4266;color:#fff}
+#map{height:min(62vh,650px);min-height:360px;border:1px solid var(--line);border-radius:13px;overflow:hidden}
+.legend{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin-top:10px}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--yellow);margin-right:5px}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.info-card{background:#0b1c30;border:1px solid var(--line);border-radius:10px;padding:12px}
+.info-card b{display:block;margin-bottom:6px;color:#fff}
+footer{text-align:center;color:#8198b2;font-size:11px;line-height:1.6;padding:18px}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#10243b;color:#eef5ff}
+.leaflet-control-attribution{font-size:10px}
+@media(min-width:700px){main{padding:22px}}
+</style>
+</head>
+<body>
+<header><div class="brand">ARINA MI <span>MONITOR</span></div><div class="sub">ІНФОРМАЦІЙНА ПЛАТФОРМА · ХАРКІВ ТА ОБЛАСТЬ</div></header>
+<main>
+<section class="panel">
+<h2>Інформація для мешканців Харківщини</h2>
+<div class="muted">Цивільна інформаційна платформа з картою населених пунктів, посиланнями на офіційні сповіщення та корисними повідомленнями. Ця сторінка не є системою оповіщення. Відсутність повідомлень тут не означає відсутності небезпеки.</div>
+<div class="actions">
+<a class="btn" href="https://alerts.in.ua/" target="_blank" rel="noopener noreferrer">Перевірити повітряну тривогу</a>
+<a class="btn alt" href="https://t.me/kharkiv_info_chanel" target="_blank" rel="noopener noreferrer">Наш Telegram-канал</a>
+<a class="btn alt" href="https://t.me/ArinaMi_Monitor_Bot" target="_blank" rel="noopener noreferrer">Наш Telegram-бот</a>
+</div>
+</section>
+<section class="panel">
+<h2>Інтерактивна мапа Харківської області</h2>
+<div id="map" role="application" aria-label="Інтерактивна карта населених пунктів Харківської області"></div>
+<div class="legend"><span><i class="dot"></i>Населений пункт</span><span>Натисніть на позначку, щоб побачити назву</span></div>
+</section>
+<section class="panel">
+<h2>Інформаційні розділи</h2>
+<div class="info-grid">
+<div class="info-card"><b>Офіційні сповіщення</b><div class="muted">Перевіряйте актуальний статус тривоги через офіційні та перевірені джерела.</div></div>
+<div class="info-card"><b>Повідомлення для цивільних</b><div class="muted">Тут можуть розміщуватися перевірені загальні попередження, рекомендації та оголошення.</div></div>
+<div class="info-card"><b>Архів та статистика</b><div class="muted">Розділ буде доповнено після підключення джерел цивільних повідомлень та їх перевірки.</div></div>
+</div>
+</section>
+<section class="panel">
+<h2>Важливо</h2>
+<div class="muted">На публічній карті не відображаються точні координати, маршрути, напрямки чи переміщення повітряних або військових цілей. Повідомлення з Telegram перед публікацією мають проходити фільтрацію, затримку та перевірку людиною.</div>
+</section>
+</main>
+<footer>ARINA MI MONITOR · Харківська область<br>Карта населених пунктів для цивільного інформування. Дотримуйтеся офіційних сповіщень і правил безпеки.</footer>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const map=L.map('map').setView([49.45,36.15],8);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}).addTo(map);
+const towns=[['Харків',49.9935,36.2304],['Дергачі',50.1066,36.1211],['Чугуїв',49.8359,36.6880],['Богодухів',50.1647,35.5279],['Мерефа',49.8230,36.0500],['Зміїв',49.6960,36.3610],['Балаклія',49.4627,36.8590],['Ізюм',49.2088,37.2485],['Лозова',48.8894,36.3175],['Куп’янськ',49.7106,37.6150]];
+towns.forEach(([name,lat,lng])=>L.circleMarker([lat,lng],{radius:7,color:'#f2c500',weight:2,fillColor:'#2479bd',fillOpacity:.95}).addTo(map).bindPopup('<b>'+name+'</b><br>Населений пункт Харківської області'));
+</script>
+</body>
+</html>
