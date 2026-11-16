@@ -11,6 +11,8 @@ concurrency:
 jobs:
   update-status:
     runs-on: ubuntu-latest
+    env:
+      ALERTS_API_TOKEN: ${{ secrets.ALERTS_API_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - name: Перевірити наявність API-токена
