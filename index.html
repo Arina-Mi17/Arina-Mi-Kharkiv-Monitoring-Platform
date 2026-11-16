@@ -1,70 +1,47 @@
 <!doctype html>
 <html lang="uk">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#071426">
-<meta name="description" content="ARINA MI MONITOR — цивільна інформаційна платформа Харкова та Харківської області.">
-<title>ARINA MI MONITOR — Харків та область</title>
+<meta name="description" content="ARINA MI MONITOR — цивільні сповіщення та статус повітряної тривоги в Харківській області.">
+<title>ARINA MI MONITOR — Харківщина</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
-:root{--bg:#071426;--panel:#10243b;--panel2:#0b1c30;--line:#294866;--yellow:#f2c500;--blue:#2479bd;--muted:#a9bfd8;--white:#eef5ff}
+:root{color-scheme:dark;--bg:#071426;--panel:#10243b;--line:#294866;--yellow:#f2c500;--blue:#2479bd;--muted:#a9bfd8;--white:#eef5ff}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#102b49 0,#071426 58%);color:var(--white);font:15px/1.5 Arial,sans-serif}
-header{padding:24px 18px 20px;background:linear-gradient(120deg,#0b2039,#12375c);border-bottom:2px solid var(--yellow)}
-.head{max-width:1160px;margin:auto}.brand{font-size:clamp(25px,5vw,36px);font-weight:900;letter-spacing:1.5px}.brand span{color:var(--yellow)}.sub{margin-top:6px;color:var(--muted);font-size:11px;letter-spacing:1.6px}
-main{max-width:1160px;margin:auto;padding:16px}.panel{background:linear-gradient(145deg,#10243b,#0c1d31);border:1px solid var(--line);border-radius:15px;padding:17px;margin-bottom:15px;box-shadow:0 8px 26px #0002}
-h2{font-size:18px;margin:2px 0 10px}.muted{color:var(--muted);font-size:13px;line-height:1.65}
-.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:15px}.btn{display:inline-flex;align-items:center;justify-content:center;padding:11px 15px;border-radius:9px;background:var(--yellow);color:#071426;text-decoration:none;font-weight:800;font-size:13px;border:1px solid transparent}.btn.alt{background:#1a4266;color:#fff;border-color:#315b7e}.btn:focus,input:focus{outline:2px solid var(--yellow);outline-offset:2px}
-.map-tools{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0}.map-tools input{flex:1;min-width:190px;background:#071426;color:#fff;border:1px solid #42617e;border-radius:9px;padding:12px;font-size:14px}
-#map{height:min(65vh,680px);min-height:380px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#0b1c30}
-.legend{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin-top:11px}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--yellow);margin-right:5px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:11px}.tile{background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:14px}.tile b{display:block;margin-bottom:5px;color:#fff}.status{display:inline-block;border:1px solid #52718e;background:#0a1b2d;border-radius:30px;padding:5px 10px;color:#c9dbed;font-size:11px;margin-top:10px}
-footer{text-align:center;color:#8198b2;font-size:11px;line-height:1.7;padding:20px}
-.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#10243b;color:#eef5ff}.leaflet-container a{color:#f2c500}.leaflet-control-attribution{font-size:10px}
-.feed-list{display:grid;gap:10px;margin-top:12px}.feed-card{background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:13px}.feed-card p{white-space:pre-wrap;margin:7px 0;color:var(--white)}.feed-meta{font-size:11px;color:var(--muted)}.feed-card a{color:var(--yellow);font-size:12px}.feed-empty{color:var(--muted);font-size:13px;padding:12px 0}
-@media(min-width:700px){main{padding:23px}}
-</style>
-</head>
+header{padding:22px 16px 18px;background:linear-gradient(120deg,#0b2039,#12375c);border-bottom:2px solid var(--yellow)}.head,main{max-width:1180px;margin:auto}.brand{font-size:clamp(25px,5vw,37px);font-weight:900;letter-spacing:1.4px}.brand span{color:var(--yellow)}.sub{margin-top:5px;color:var(--muted);font-size:11px;letter-spacing:1.4px}
+main{padding:15px}.panel{background:linear-gradient(145deg,#10243b,#0c1d31);border:1px solid var(--line);border-radius:15px;padding:16px;margin-bottom:14px;box-shadow:0 8px 26px #0002}h2{font-size:18px;margin:0 0 10px}.muted{color:var(--muted);font-size:13px;line-height:1.6}
+.statusbox{border:1px solid var(--line);border-radius:13px;padding:16px;background:#091a2c;display:flex;align-items:center;gap:13px}.lamp{width:16px;height:16px;border-radius:50%;background:#8493a4;box-shadow:0 0 0 5px #8493a422;flex:none}.lamp.red{background:#ff4242;box-shadow:0 0 0 5px #ff424222}.lamp.yellow{background:#f2c500;box-shadow:0 0 0 5px #f2c50022}.lamp.green{background:#31bd79;box-shadow:0 0 0 5px #31bd7922}.status-title{font-size:18px;font-weight:800}.status-time{font-size:11px;color:var(--muted);margin-top:3px}
+.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}.btn{display:inline-flex;align-items:center;justify-content:center;padding:11px 14px;border-radius:9px;background:var(--yellow);color:#071426;text-decoration:none;font-weight:800;font-size:12px;border:0;cursor:pointer}.btn.alt{background:#1a4266;color:#fff;border:1px solid #315b7e}
+#map{height:min(65vh,680px);min-height:370px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#0b1c30}.map-tools{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0}.map-tools input{flex:1;min-width:180px;background:#071426;color:#fff;border:1px solid #42617e;border-radius:9px;padding:12px;font-size:14px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin-top:10px}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--yellow);margin-right:5px}
+.feed-list{display:grid;gap:10px;margin-top:12px}.feed-card{background:#091a2c;border:1px solid var(--line);border-radius:11px;padding:13px}.feed-card p{white-space:pre-wrap;margin:7px 0}.feed-meta{font-size:11px;color:var(--muted)}.feed-card a{color:var(--yellow);font-size:12px}.empty{color:var(--muted);font-size:13px;padding:10px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}.tile{background:#091a2c;border:1px solid var(--line);border-radius:11px;padding:13px}.tile b{display:block;margin-bottom:4px}
+footer{text-align:center;color:#8198b2;font-size:11px;padding:18px;line-height:1.7}.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#10243b;color:#eef5ff}.leaflet-container a{color:#f2c500}.leaflet-control-attribution{font-size:10px}
+@media(min-width:700px){main{padding:22px}}
+</style></head>
 <body>
-<header><div class="head"><div class="brand">ARINA MI <span>MONITOR</span></div><div class="sub">ЦИВІЛЬНА ІНФОРМАЦІЙНА ПЛАТФОРМА · ХАРКІВ ТА ОБЛАСТЬ</div></div></header>
+<header><div class="head"><div class="brand">ARINA MI <span>MONITOR</span></div><div class="sub">ЦИВІЛЬНА БЕЗПЕКА · ХАРКІВ ТА ХАРКІВСЬКА ОБЛАСТЬ</div></div></header>
 <main>
 <section class="panel">
-<h2>Інформація для мешканців Харківщини</h2>
-<div class="muted">Мапа населених пунктів, швидкий перехід до офіційних сповіщень та інформаційних ресурсів. Сторінка не є системою оповіщення. Відсутність повідомлень на цій сторінці не означає відсутності небезпеки — завжди перевіряйте офіційні джерела.</div>
-<div class="actions">
-<a class="btn" href="https://alerts.in.ua/" target="_blank" rel="noopener noreferrer">ПОВІТРЯНІ ТРИВОГИ</a>
-<a class="btn alt" href="https://t.me/kharkiv_info_chanel" target="_blank" rel="noopener noreferrer">TELEGRAM-КАНАЛ</a>
-<a class="btn alt" href="https://t.me/ArinaMi_Monitor_Bot" target="_blank" rel="noopener noreferrer">TELEGRAM-БОТ</a>
-</div>
-<span class="status">Інформаційна мапа · без відображення руху цілей</span>
+<h2>Поточний статус повітряної тривоги</h2>
+<div class="statusbox" aria-live="polite"><i id="statusLamp" class="lamp"></i><div><div id="statusTitle" class="status-title">Перевіряємо статус…</div><div id="statusTime" class="status-time">Очікування даних офіційного API</div></div></div>
+<div class="muted" style="margin-top:10px">Статус для Харківської області. Часткова тривога відображається окремо. Дані можуть надходити із затримкою або бути тимчасово недоступними.</div>
+<div class="actions"><a class="btn" href="https://alerts.in.ua/" target="_blank" rel="noopener noreferrer">ВІДКРИТИ ОФІЦІЙНУ МАПУ ТРИВОГ</a><a class="btn alt" href="https://t.me/kharkiv_info_chanel" target="_blank" rel="noopener noreferrer">TELEGRAM-КАНАЛ</a><a class="btn alt" href="https://t.me/ArinaMi_Monitor_Bot" target="_blank" rel="noopener noreferrer">TELEGRAM-БОТ</a></div>
 </section>
 <section class="panel">
-<h2>Інтерактивна мапа Харківської області</h2>
-<div class="muted">Знайдіть населений пункт за назвою або натисніть на маркер. Позначки показують лише загальне розташування населених пунктів.</div>
-<div class="map-tools"><input id="townSearch" type="search" placeholder="Введіть назву населеного пункту…" aria-label="Пошук населеного пункту"><button class="btn alt" id="showAll" type="button">ПОКАЗАТИ ВСЮ ОБЛАСТЬ</button></div>
-<div id="map" role="application" aria-label="Інтерактивна карта населених пунктів Харківської області"></div>
-<div class="legend"><span><i class="dot"></i>Населений пункт</span><span>Мапа: OpenStreetMap</span></div>
+<h2>Мапа Харківської області</h2><div class="muted">На мапі позначені населені пункти для орієнтування. Позначки не показують місця або рух повітряних чи військових цілей.</div>
+<div class="map-tools"><input id="townSearch" type="search" placeholder="Знайти населений пункт…" aria-label="Пошук населеного пункту"><button class="btn alt" id="showAll" type="button">ВСЯ ОБЛАСТЬ</button></div>
+<div id="map" role="application" aria-label="Інтерактивна карта Харківської області"></div>
+<div class="legend"><span><i class="dot"></i>Населений пункт</span><span>Картографічна основа: OpenStreetMap</span></div>
 </section>
-<section class="panel">
-<h2>Повідомлення з Telegram-каналу</h2>
-<div class="muted">Тут автоматично з’являтимуться дописи, які ти спеціально позначиш у каналі для публікації на сайті.</div>
-<div id="telegramFeed" class="feed-list"><div class="feed-empty">Завантаження повідомлень…</div></div>
-</section>
-<section class="panel">
-<h2>Корисні розділи</h2>
-<div class="grid">
-<div class="tile"><b>Офіційні сповіщення</b><div class="muted">Актуальний статус повітряної тривоги перевіряйте на перевірених офіційних ресурсах.</div></div>
-<div class="tile"><b>Повідомлення для цивільних</b><div class="muted">Тут можуть публікуватися загальні попередження, рекомендації та оголошення після перевірки.</div></div>
-<div class="tile"><b>Архів та статистика</b><div class="muted">Розділ буде активовано після налаштування безпечного джерела цивільних повідомлень та серверної частини.</div></div>
-<div class="tile"><b>Зворотний зв’язок</b><div class="muted">Стежте за оновленнями та надсилайте звернення через Telegram-канал.</div></div>
-</div>
-</section>
-<section class="panel">
-<h2>Безпека та достовірність</h2>
-<div class="muted">Публічна мапа не відображає точні координати, маршрути, напрямки або переміщення повітряних чи військових цілей. Не публікуйте неперевірені повідомлення. Для рішень щодо безпеки керуйтеся офіційними сповіщеннями ДСНС та місцевої влади.</div>
-</section>
-</main>
-<footer>ARINA MI MONITOR · Харківська область<br>Карта загального розташування населених пунктів · OpenStreetMap</footer>
+<section class="panel"><h2>Цивільні повідомлення з Telegram</h2><div class="muted">Тут показуються дописи каналу, спеціально позначені для публікації на сайті. Нові повідомлення синхронізуються автоматично.</div><div id="telegramFeed" class="feed-list"><div class="empty">Завантаження…</div></div></section>
+<section class="panel"><h2>Важливо</h2><div class="grid">
+<div class="tile"><b>Не замінює офіційне оповіщення</b><div class="muted">Завжди реагуйте на сирени та повідомлення місцевої влади й ДСНС.</div></div>
+<div class="tile"><b>Лише цивільна інформація</b><div class="muted">Платформа не публікує точні координати, маршрути, напрямки або переміщення цілей.</div></div>
+<div class="tile"><b>Дані можуть затримуватися</b><div class="muted">Якщо статус не оновився або джерело недоступне, перевірте офіційні ресурси.</div></div>
+</div></section>
+</main><footer>ARINA MI MONITOR · Харківщина<br>Інформаційний сервіс для цивільного населення · OpenStreetMap</footer>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 const map=L.map('map',{scrollWheelZoom:false}).setView([49.45,36.15],8);
@@ -72,41 +49,11 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:17,att
 const towns=[['Харків',49.9935,36.2304],['Дергачі',50.1066,36.1211],['Чугуїв',49.8359,36.6880],['Богодухів',50.1647,35.5279],['Мерефа',49.8230,36.0500],['Зміїв',49.6960,36.3610],['Балаклія',49.4627,36.8590],['Ізюм',49.2088,37.2485],['Лозова',48.8894,36.3175],['Куп’янськ',49.7106,37.6150]];
 const markers=towns.map(([name,lat,lng])=>({name,marker:L.circleMarker([lat,lng],{radius:7,color:'#f2c500',weight:2,fillColor:'#2479bd',fillOpacity:.95}).addTo(map).bindPopup('<b>'+name+'</b><br>Населений пункт Харківської області')}));
 const bounds=L.latLngBounds(towns.map(t=>[t[1],t[2]]));
-document.getElementById('showAll').addEventListener('click',()=>map.fitBounds(bounds.pad(.18)));
+document.getElementById('showAll').onclick=()=>map.fitBounds(bounds.pad(.18));
 document.getElementById('townSearch').addEventListener('keydown',e=>{if(e.key==='Enter'){const q=e.target.value.trim().toLocaleLowerCase('uk');const found=markers.find(x=>x.name.toLocaleLowerCase('uk').includes(q));if(found){map.setView(found.marker.getLatLng(),11);found.marker.openPopup()}else if(q){e.target.setCustomValidity('Населений пункт не знайдено у списку');e.target.reportValidity();e.target.setCustomValidity('')}}});
 setTimeout(()=>map.invalidateSize(),250);
-async function loadTelegramFeed(){
-  const root=document.getElementById('telegramFeed');
-  try{
-    const response=await fetch('./data/messages.json?ts='+Date.now(),{cache:'no-store'});
-    if(!response.ok) throw new Error('feed unavailable');
-    const data=await response.json();
-    const messages=Array.isArray(data.messages)?data.messages:[];
-    root.replaceChildren();
-    if(!messages.length){root.innerHTML='<div class="feed-empty">Поки немає дописів, позначених для сайту.</div>';return;}
-    for(const item of messages){
-      const card=document.createElement('article');card.className='feed-card';
-      const meta=document.createElement('div');meta.className='feed-meta';
-      meta.textContent=(item.town?item.town+' · ':'')+(item.category||'Цивільне повідомлення')+' · '+new Date(item.date*1000).toLocaleString('uk-UA');
-      const body=document.createElement('p');body.textContent=item.text||'';
-      card.append(meta,body);
-      if(item.sourceUrl){const link=document.createElement('a');link.href=item.sourceUrl;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Відкрити оригінал у Telegram';card.append(link);}
-      root.append(card);
-    }
-    // Attach civil notices to broad settlement-center markers only.
-    for(const point of markers){
-      const related=messages.filter(item=>item.town===point.name);
-      if(!related.length) continue;
-      const popup=document.createElement('div');
-      const heading=document.createElement('strong');heading.textContent=point.name+' — цивільні повідомлення';popup.append(heading);
-      for(const item of related.slice(0,5)){
-        const paragraph=document.createElement('p');paragraph.textContent=item.text||'';popup.append(paragraph);
-      }
-      point.marker.bindPopup(popup);
-    }
-  }catch(error){root.innerHTML='<div class="feed-empty">Стрічка тимчасово недоступна. Спробуйте оновити сторінку пізніше.</div>';}
-}
-loadTelegramFeed();
-</script>
-</body>
-</html>
+const stateUI={R:['Повітряна тривога в області','red'],A:['Повітряна тривога в області','red'],Y:['Попередження / жовтий рівень','yellow'],P:['Часткова тривога в громадах','yellow'],N:['Активної тривоги не зафіксовано','green']};
+async function loadAlertStatus(){const title=document.getElementById('statusTitle'),time=document.getElementById('statusTime'),lamp=document.getElementById('statusLamp');try{const r=await fetch('./data/alert-status.json?ts='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('unavailable');const d=await r.json();const state=stateUI[d.status];if(!state)throw Error('unknown');title.textContent=state[0];lamp.className='lamp '+state[1];time.textContent='Оновлено: '+new Date(d.checkedAt).toLocaleString('uk-UA')+' · джерело: alerts.in.ua';}catch(e){title.textContent='Немає свіжих даних';lamp.className='lamp';time.textContent='Перевірте офіційну мапу alerts.in.ua';}}
+async function loadTelegramFeed(){const root=document.getElementById('telegramFeed');try{const r=await fetch('./data/messages.json?ts='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error();const d=await r.json(),items=Array.isArray(d.messages)?d.messages:[];root.replaceChildren();if(!items.length){root.innerHTML='<div class="empty">Поки немає дописів, позначених для сайту.</div>';return;}for(const item of items){const card=document.createElement('article');card.className='feed-card';const meta=document.createElement('div');meta.className='feed-meta';meta.textContent=(item.town?item.town+' · ':'')+(item.category||'Цивільне повідомлення')+' · '+new Date(item.date*1000).toLocaleString('uk-UA');const body=document.createElement('p');body.textContent=item.text||'Повідомлення без текстового опису';card.append(meta,body);if(item.sourceUrl){const a=document.createElement('a');a.href=item.sourceUrl;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Оригінал у Telegram';card.append(a);}root.append(card);}}catch(e){root.innerHTML='<div class="empty">Стрічка тимчасово недоступна.</div>';}}
+loadAlertStatus();loadTelegramFeed();setInterval(loadAlertStatus,60000);setInterval(loadTelegramFeed,60000);
+</script></body></html>
