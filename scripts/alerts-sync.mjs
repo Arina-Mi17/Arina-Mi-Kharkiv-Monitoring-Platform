@@ -1,6 +1,6 @@
 const token = process.env.ALERTS_API_TOKEN;
 if (!token) throw new Error("Missing ALERTS_API_TOKEN repository secret");
-const endpoint = "https://api.alerts.in.ua/v2/iot/active_air_raid_alerts/16.json?token=" + encodeURIComponent(token);
+const endpoint = "https://api.alerts.in.ua/v2/iot/active_air_raid_alerts/22.json?token=" + encodeURIComponent(token);
 const response = await fetch(endpoint, { headers: { "cache-control": "no-cache" } });
 if (!response.ok) throw new Error("alerts.in.ua API returned HTTP " + response.status);
 const raw = (await response.text()).trim().replace(/^"|"$/g, "");
