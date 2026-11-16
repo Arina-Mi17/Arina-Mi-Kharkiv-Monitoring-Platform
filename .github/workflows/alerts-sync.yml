@@ -11,20 +11,13 @@ concurrency:
 jobs:
   update-status:
     runs-on: ubuntu-latest
-    env:
-      ALERTS_API_TOKEN: ${{ secrets.ALERTS_API_TOKEN }}
     steps:
       - uses: actions/checkout@v4
-      - name: Перевірити наявність API-токена
-        if: ${{ env.ALERTS_API_TOKEN == '' }}
-        run: echo "::warning::Додайте ALERTS_API_TOKEN у Settings → Secrets and variables → Actions"
       - name: Отримати статус Харківської області
-        if: ${{ env.ALERTS_API_TOKEN != '' }}
         env:
           ALERTS_API_TOKEN: ${{ secrets.ALERTS_API_TOKEN }}
         run: node scripts/alerts-sync.mjs
       - name: Зберегти оновлений статус
-        if: ${{ env.ALERTS_API_TOKEN != '' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
