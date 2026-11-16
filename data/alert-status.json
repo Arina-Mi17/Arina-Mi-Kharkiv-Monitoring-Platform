@@ -1,0 +1,7 @@
+{
+  "region": "Харківська область",
+  "status": "U",
+  "checkedAt": null,
+  "source": "https://alerts.in.ua/",
+  "note": "Очікує налаштування ALERTS_API_TOKEN. U означає, що актуальні дані ще не отримані."
+}
